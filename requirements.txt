@@ -1,0 +1,34 @@
+# API & Serving
+fastapi
+uvicorn
+requests
+pydantic
+
+# Frontend
+streamlit
+plotly
+
+# ML & Data
+scikit-learn
+xgboost
+imbalanced-learn
+pandas
+numpy
+joblib
+shap
+
+# Database
+sqlalchemy
+psycopg2-binary
+
+# Experiment Tracking & Monitoring
+mlflow
+evidently
+
+# Config & Testing
+python-dotenv
+pytest
+httpx
+
+# hypen e .
+-e .
