@@ -14,6 +14,8 @@ xgboost
 imbalanced-learn
 pandas
 numpy
+matplotlib
+seaborn
 joblib
 shap
 
