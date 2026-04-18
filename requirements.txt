@@ -18,6 +18,8 @@ matplotlib
 seaborn
 joblib
 shap
+pyYAML
+types-PyYAML
 
 # Database
 sqlalchemy
