@@ -26,6 +26,4 @@ stream_handler.setLevel(log_level)
 stream_handler.setFormatter(formatter)
 file_handler.setLevel(log_level)
 
-if __name__ == "__main__":
-    logger.info("Logging setup complete.")
 
