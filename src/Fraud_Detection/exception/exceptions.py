@@ -1,11 +1,10 @@
 import sys
-from src.Fraud_Detection.logger import logger
 
 def error_message_details(error, error_detail: sys):
     _, _, exc_tb = error_detail.exc_info()
-    filename = exc_tb.tb_frame.f_code.co_filename
-    error_message = f"Error Ocurred in script: [{0}] at line number: [{1}] error message: [{2}]".format(
-        filename, exc_tb.tb_frame.f_lineno, str(error)
+    filename = exc_tb.tb_frame.tb_code.co_filename
+    error_message = f"Error Occurred in script: [{0}] at line number: [{1}] error message: [{2}]".format(
+        filename, exc_tb.tb_lineno, str(error)
     )
     return error_message
 
