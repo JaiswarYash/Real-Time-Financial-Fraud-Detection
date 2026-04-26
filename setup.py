@@ -13,8 +13,8 @@ def get_requirements(file_path:str)->List[str]:
     return requirements
 
 setup(
-    name='Real Time Financial Fraud Detection',
-    version='0.0.1',
+    name="Fraud_Detection",
+    version="0.0.1",
     description='A real-time financial fraud detection system using machine learning.',
     author='Yash Kumar',
     author_email="yashkumr056@gmail.com",

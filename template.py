@@ -8,11 +8,14 @@ project_name = "Fraud_Detection"
 
 list_of_files = [
     ".github/workflows/.gitkeep",
+    "src/__init__.py",
     f"src/{project_name}/__init__.py",
     f"src/{project_name}/components/__init__.py",
+    f"src/{project_name}/components/data_ingestion.py",
     f"src/{project_name}/utils/__init__.py",
     f"src/{project_name}/utils/common.py",
     f"src/{project_name}/logger/__init__.py",
+    f"src/{project_name}/exception/__init__.py",
     f"src/{project_name}/config/__init__.py",
     f"src/{project_name}/config/configuration.py",
     f"src/{project_name}/pipeline/__init__.py",
