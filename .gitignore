@@ -147,6 +147,15 @@ ENV/
 env.bak/
 venv.bak/
 
+# Data files
+data/raw/*.csv
+data/processed/*.csv
+artifacts/
+
+# Model files  
+models/*.pkl
+models/*.joblib
+
 # Spyder project settings
 .spyderproject
 .spyproject
