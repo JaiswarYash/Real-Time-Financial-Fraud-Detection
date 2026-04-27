@@ -20,6 +20,7 @@ joblib
 shap
 pyYAML
 types-PyYAML
+dill
 
 # Database
 sqlalchemy
