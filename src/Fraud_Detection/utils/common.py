@@ -6,6 +6,7 @@ import dill
 from src.Fraud_Detection.logger.logger import logger
 from src.Fraud_Detection.exception.exceptions import CustomException
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.model_selection import RandomizedSearchCV
 
 def save_object(file_path, obj):
     try:
@@ -25,11 +26,20 @@ def load_object(file_path):
     except Exception as e:
         raise CustomException(e, sys)
 
-def evaluate_model(X_train, y_train, X_test, y_test, models):
+def evaluate_model(X_train, y_train, X_test, y_test, models, params):
     try:
         report = {}
         for model_name, model in models.items():
-            model.fit(X_train, y_train) # Train the model
+            param = params.get(model_name, {})
+            if param:
+                logger.info("performing hyperparameter tuning for model: {model_name}")
+                rs = RandomizedSearchCV(estimator=model,param_distributions=param, n_iter=10,random_state=42, cv=5, n_jobs=-1)
+                rs.fit(X_train, y_train)
+                model.set_params(**rs.best_params_)
+                model.fit(X_train, y_train)
+            else:
+                model.fit(X_train, y_train)
+
 
             y_train_pred = model.predict(X_train)
             y_test_pred = model.predict(X_test)
