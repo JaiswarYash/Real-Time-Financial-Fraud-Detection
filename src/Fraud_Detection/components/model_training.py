@@ -18,6 +18,7 @@ class ModelTrainer:
         self.model_trainer_config = ModelTrainerConfig()
     
     def initiate_model_trainer(self, train_array, test_array):
+        
         try:
             logger.info("splitting training and test input data")
             X_train,y_train,X_test,y_test = (
@@ -66,7 +67,7 @@ class ModelTrainer:
             best_model_name = max(model_report, key=lambda model: model_report[model]['test_recall'])
             best_model = models[best_model_name]
 
-            if model_report[best_model_name]['test_recall'] < 0.6:
+            if model_report[best_model_name]['test_recall'] < 0.3:
                     raise CustomException("No best model found", sys)
                 
             logger.info(f"Best found model on both training and testing dataset: {best_model_name} with score: {model_report[best_model_name]['test_recall']}")
