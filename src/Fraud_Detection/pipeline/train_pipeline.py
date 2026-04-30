@@ -20,7 +20,7 @@ class TrainPipeline:
             train_arr, test_arr = data_transformation.initiate_data_transformation(train_data_path, test_path)
             model_trainer = ModelTrainer()
             best_model_name, best_model_score = model_trainer.initiate_model_trainer(train_arr, test_arr)
-            logger.info(f"Best model: {best_model_name} with recall score: {best_model_score}")
+            logger.info(f"Best model: {best_model_name} with recall score: {best_model_score} & precision score: {best_model_score}")
             logger.info("Training pipeline completed")
             return best_model_name, best_model_score
         except Exception as e:

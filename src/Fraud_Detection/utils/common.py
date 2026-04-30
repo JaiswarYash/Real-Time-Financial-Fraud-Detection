@@ -64,6 +64,8 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params):
                 "test_f1": test_f1,
                 "test_roc_auc": test_roc_auc
             }
+            logger.info(f"Model: {model_name} - Train Precision: {train_precision}, Train Recall: {train_recall}, Train F1: {train_f1}, Train ROC AUC: {train_roc_auc}")
+            logger.info(f"Model: {model_name} - Test Precision: {test_precision}, Test Recall: {test_recall}, Test F1: {test_f1}, Test ROC AUC: {test_roc_auc}")
         return report
     except Exception as e:
         raise CustomException(e, sys)

@@ -66,11 +66,14 @@ class ModelTrainer:
             # to get best model name from dict & score
             best_model_name = max(model_report, key=lambda model: model_report[model]['test_recall'])
             best_model = models[best_model_name]
+            best_precision = model_report[best_model_name]['test_precision']
 
             if model_report[best_model_name]['test_recall'] < 0.3:
                     raise CustomException("No best model found", sys)
                 
             logger.info(f"Best found model on both training and testing dataset: {best_model_name} with score: {model_report[best_model_name]['test_recall']}")
+            logger.info(f"Best model: {best_model_name} with recall: {model_report[best_model_name]['test_recall']} & precision: {best_precision}")
+
 
             save_object(
                 file_path=self.model_trainer_config.trained_model_file_path,
