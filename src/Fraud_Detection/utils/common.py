@@ -32,7 +32,7 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params):
         for model_name, model in models.items():
             param = params.get(model_name, {})
             if param:
-                logger.info("performing hyperparameter tuning for model: {model_name}")
+                logger.info(f"performing hyperparameter tuning for model: {model_name}")
                 rs = RandomizedSearchCV(estimator=model,param_distributions=param, n_iter=10,random_state=42, cv=5, n_jobs=-1)
                 rs.fit(X_train, y_train)
                 model.set_params(**rs.best_params_)

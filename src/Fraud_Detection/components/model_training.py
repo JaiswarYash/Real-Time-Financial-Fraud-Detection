@@ -29,31 +29,30 @@ class ModelTrainer:
             )
 
             models = {
-                "Logistic Regression": LogisticRegression(),
-                "Random Forest": RandomForestClassifier(),
+                "Logistic_Regression": LogisticRegression(),
+                "Random_Forest": RandomForestClassifier(),
                 "XGBoost": XGBClassifier(),
             }
 
             parameters = {
                  "Logistic_Regression": {
-                    'class_weight': 'balanced',
+                    'class_weight': ['balanced', None],
                     'C': [0.01, 0.1, 1, 10, 100],
-                    'penalty': ['l1', 'l2'],
-                    'solver': ['libliner', 'saga'],
-                    'max_iter': [100, 200, 300]
-                 },
-                 "Random_forest": {
+                    'max_iter': [500, 1000, 2000],
+                    'solver': ['liblinear', 'lbfgs']
+                },
+                 "Random_Forest": {
                     'class_weight': ['balanced', 'balanced_subsample'],
                     'n_estimators': [100, 200, 300],
-                    'max_depth': [None, 10, 20, 30],
-                    'min_sample_split': [2,5,10],
+                    'max_depth': [10, 20, 30],
+                    'min_samples_split': [2,5,10],
                     'min_samples_leaf': [1,2,4],
                     'bootstrap': [True, False],
-                    'max_features': ['auto', 'sqrt']
+                    'max_features': ['sqrt', 'log2']
                  },
                  "XGBoost": {
                       'n_estimators': [100, 200, 300],
-                      'learning_rate': [0.01, 0.1, 0.2, 0.3],
+                      'learning_rate': [0.01, 0.1, 0.2],
                       'max_depth': [3, 6, 9],
                       'subsample': [0.6,0.8,1.0],
                       'colsample_bytree': [0.6,0.8,1.0],
@@ -67,11 +66,11 @@ class ModelTrainer:
             best_model_name = max(model_report, key=lambda model: model_report[model]['test_recall'])
             best_model = models[best_model_name]
             best_precision = model_report[best_model_name]['test_precision']
+            best_recall = model_report[best_model_name]['test_recall']
 
-            if model_report[best_model_name]['test_recall'] < 0.3:
-                    raise CustomException("No best model found", sys)
+            if best_recall < 0.6 and best_precision < 0.6:
+                raise CustomException("No best model found", sys)
                 
-            logger.info(f"Best found model on both training and testing dataset: {best_model_name} with score: {model_report[best_model_name]['test_recall']}")
             logger.info(f"Best model: {best_model_name} with recall: {model_report[best_model_name]['test_recall']} & precision: {best_precision}")
 
 
@@ -81,7 +80,7 @@ class ModelTrainer:
             )
             logger.info("Saved best model object.")
 
-            return best_model_name, model_report[best_model_name]['test_recall']
+            return best_model_name, best_recall, best_precision
 
         except Exception as e:
             raise CustomException(e, sys)
