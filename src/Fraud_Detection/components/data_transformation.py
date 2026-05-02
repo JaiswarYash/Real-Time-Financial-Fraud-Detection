@@ -46,7 +46,7 @@ class DataTransformation:
         try:
             train_df = pd.read_csv(train_path)
             test_df = pd.read_csv(test_path)
-            smote = SMOTE(random_state=42)
+            # smote = SMOTE(random_state=42)
 
             logger.info("Read train and test data completed")
 
@@ -67,9 +67,9 @@ class DataTransformation:
             input_feature_train_arr = preprocessing_obj.fit_transform(input_feature_train_df)
             input_feature_test_arr = preprocessing_obj.transform(input_feature_test_df)
 
-            logger.info("Applying SMOTE on training data")
-            input_feature_train_arr, target_feature_train_df = smote.fit_resample(input_feature_train_arr, target_feature_train_df)
-            logger.info(f"After SMOTE - Training samples: {input_feature_train_arr.shape[0]}")
+            # logger.info("Applying SMOTE on training data")
+            # input_feature_train_arr, target_feature_train_df = smote.fit_resample(input_feature_train_arr, target_feature_train_df)
+            # logger.info(f"After SMOTE - Training samples: {input_feature_train_arr.shape[0]}")
             
 
             train_arr = np.c_[input_feature_train_arr, np.array(target_feature_train_df)]

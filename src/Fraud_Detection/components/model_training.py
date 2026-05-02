@@ -30,33 +30,31 @@ class ModelTrainer:
 
             models = {
                 "Logistic_Regression": LogisticRegression(),
-                "Random_Forest": RandomForestClassifier(),
+                "Random_Forest": RandomForestClassifier(n_jobs=-1, n_estimators=100),
                 "XGBoost": XGBClassifier(),
             }
 
             parameters = {
                  "Logistic_Regression": {
                     'class_weight': ['balanced', None],
-                    'C': [0.01, 0.1, 1, 10, 100],
+                    'C': [0.01, 0.1, 1, 10],
                     'max_iter': [500, 1000, 2000],
                     'solver': ['liblinear', 'lbfgs']
                 },
                  "Random_Forest": {
-                    'class_weight': ['balanced', 'balanced_subsample'],
-                    'n_estimators': [100, 200, 300],
-                    'max_depth': [10, 20, 30],
-                    'min_samples_split': [2,5,10],
-                    'min_samples_leaf': [1,2,4],
-                    'bootstrap': [True, False],
-                    'max_features': ['sqrt', 'log2']
+                    'class_weight': ['balanced'],
+                    'n_estimators': [50, 75],
+                    'max_depth': [10, 20],
+                    "max_samples": [0.5, 0.7],
+                    'min_samples_split': [2, 5],
+                    'max_features': ['sqrt']
                  },
                  "XGBoost": {
-                      'n_estimators': [100, 200, 300],
-                      'learning_rate': [0.01, 0.1, 0.2],
-                      'max_depth': [3, 6, 9],
-                      'subsample': [0.6,0.8,1.0],
-                      'colsample_bytree': [0.6,0.8,1.0],
-                      'scale_pos_weight': [100, 200, 500, 1000]
+                        'n_estimators': [50, 100],
+                        'learning_rate': [0.01, 0.1],
+                        'max_depth': [3, 6],
+                        'reg_alpha': [0, 0.1, 0.5],
+                        'reg_lambda': [1, 2, 5],
                  }
             }
 

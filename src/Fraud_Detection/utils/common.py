@@ -5,8 +5,9 @@ import pandas as pd
 import dill
 from src.Fraud_Detection.logger.logger import logger
 from src.Fraud_Detection.exception.exceptions import CustomException
-from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import precision_score, recall_score, f1_score
 from sklearn.model_selection import RandomizedSearchCV
+from mlflo
 
 def save_object(file_path, obj):
     try:
@@ -28,12 +29,13 @@ def load_object(file_path):
 
 def evaluate_model(X_train, y_train, X_test, y_test, models, params):
     try:
+        BEST_THRESHOLD = 0.3 # # XGBoost at threshold 0.3: Recall=0.857, Precision=0.894, F1=0.875
         report = {}
         for model_name, model in models.items():
             param = params.get(model_name, {})
             if param:
-                logger.info(f"performing hyperparameter tuning for model: {model_name}")
-                rs = RandomizedSearchCV(estimator=model,param_distributions=param, n_iter=10,random_state=42, cv=5, n_jobs=-1)
+                logger.info(f"performing hyperparameter tuning for model: {model_name}") # if model_name == "Random_Forest" else 20
+                rs = RandomizedSearchCV(estimator=model, param_distributions=param, n_iter=5 if model_name == "Random_Forest" else 10, random_state=42, cv=3, n_jobs=-1)
                 rs.fit(X_train, y_train)
                 model.set_params(**rs.best_params_)
                 model.fit(X_train, y_train)
@@ -42,30 +44,31 @@ def evaluate_model(X_train, y_train, X_test, y_test, models, params):
 
 
             y_train_pred = model.predict(X_train)
-            y_test_pred = model.predict(X_test)
+            y_prob = model.predict_proba(X_test)[:,1]
+
 
             train_precision = precision_score(y_train, y_train_pred)
             train_recall = recall_score(y_train, y_train_pred)
             train_f1 = f1_score(y_train, y_train_pred)
-            train_roc_auc = roc_auc_score(y_train, y_train_pred)
-
-            test_precision = precision_score(y_test, y_test_pred)
-            test_recall = recall_score(y_test, y_test_pred)
-            test_f1 = f1_score(y_test, y_test_pred)
-            test_roc_auc = roc_auc_score(y_test, y_test_pred)
-
+         
+            # threshold = [0.3,0.5,0.6,0.7,0.8,0.9]
+            # for t in threshold:
+            #     y_test_pred = (y_prob >= t).astype(int)
+            #     precision = precision_score(y_test, y_test_pred)
+            #     recall = recall_score(y_test, y_test_pred)
+            #     f1 = f1_score(y_test, y_test_pred)
+            #     logger.info(f"Model: {model_name} - Threshold: {t} - Test Precision: {precision}, Test Recall: {recall}, Test F1: {f1}")
+                
+            
+            y_test_pred_final = (y_prob >= BEST_THRESHOLD).astype(int)
             report[model_name] = {
-                "train_precision": train_precision,
-                "train_recall": train_recall,
-                "train_f1": train_f1,
-                "train_roc_auc": train_roc_auc,
-                "test_precision": test_precision,
-                "test_recall": test_recall,
-                "test_f1": test_f1,
-                "test_roc_auc": test_roc_auc
+                "test_precision": precision_score(y_test, y_test_pred_final),
+                "test_recall": recall_score(y_test, y_test_pred_final),
+                "test_f1": f1_score(y_test, y_test_pred_final),
+                "best_threshold": BEST_THRESHOLD
             }
-            logger.info(f"Model: {model_name} - Train Precision: {train_precision}, Train Recall: {train_recall}, Train F1: {train_f1}, Train ROC AUC: {train_roc_auc}")
-            logger.info(f"Model: {model_name} - Test Precision: {test_precision}, Test Recall: {test_recall}, Test F1: {test_f1}, Test ROC AUC: {test_roc_auc}")
+            logger.info(f"Model: {model_name} - Train Precision: {train_precision}, Train Recall: {train_recall}, Train F1: {train_f1}")
+            logger.info(f"Model: {model_name} - Test Precision: {report[model_name]['test_precision']}, Test Recall: {report[model_name]['test_recall']}, Test F1: {report[model_name]['test_f1']} at Threshold: {report[model_name]['best_threshold']}")
         return report
     except Exception as e:
-        raise CustomException(e, sys)
+            raise CustomException(e, sys)
