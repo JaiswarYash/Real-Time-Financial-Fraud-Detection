@@ -25,6 +25,7 @@ def check_api_status():
             return True
     except requests.exceptions.ConnectionError:
         return False
+    return False
 
 def predict_fraud(payload: dict) -> dict | None:
     try:
@@ -42,27 +43,18 @@ def predict_fraud(payload: dict) -> dict | None:
         return None
     
 
-# feature input form
-time = st.number_input("Time", value=75000.0)
-Amount = st.number_input("Amount", value=100.0)
+
 # V1-V28 features
-if "v_features" not in st.session_state:
+
+if st.button("Analyse Random Transaction"):
     random_row = test_data.sample(1).iloc[0]
-    st.session_state.v_features = {f"V{i}": random_row[f"V{i}"] for i in range(1,29)}
-
-v_features = st.session_state.v_features
-
-# create payload
-payload = {
-    "Time": time,
-    **v_features,
-   "Amount": Amount}
-
-if st.button("Sample New Transaction"):
-    del st.session_state["v_features"]
-    st.rerun()
-
-if st.button("Predict Fraud"):
+    st.session_state.v_features = {f"V{i}": random_row[f"V{i}"] for i in range(1, 29)}
+    Amount = random_row["Amount"]
+    payload = {
+    "Time": random_row["Time"],
+    **st.session_state.v_features,
+    "Amount": Amount
+    }
     if check_api_status():
         result = predict_fraud(payload)
         if result is not None:
@@ -73,5 +65,7 @@ if st.button("Predict Fraud"):
 
             st.metric("Fraud Probability", f"{result['probability']:.2%}")
             st.metric("Risk Level", result['risk'])
+            actual = "Fraud" if random_row['Class'] == 1 else "Legitimate"
+            st.info(f"Actual Label: {actual}")
     else:
         st.error("API is not available. Please start the FastAPI server on localhost:8000")
