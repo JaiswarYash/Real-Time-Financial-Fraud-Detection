@@ -2,6 +2,7 @@
 import streamlit as st
 import requests
 import pandas as pd
+import os
 
 
 @st.cache_data
@@ -12,7 +13,7 @@ test_data = load_data()
 
 
 # app config
-API_URL = "http://localhost:8000"
+API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Financial Fraud Detection", page_icon=":money_with_wings:", layout="wide", initial_sidebar_state="auto")
 st.title("Financial Fraud Detection App")

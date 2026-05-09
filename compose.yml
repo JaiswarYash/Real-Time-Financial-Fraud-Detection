@@ -1,17 +1,17 @@
-versoion: "3.12"
+version: "3.8"
 
 services:
     api:
       build:
         context: .
-        dockerfile: dockerfile
+        dockerfile: Dockerfile
       container_name: fraud_prediction_api
       ports:
         - "8000:8000"
       volumes:
-            - ./models:/app/models # model updates without rebuild
-      envirnoment:
-          - MODEL_PATH = artifacts/model.pkl
+            - ./artifacts:/app/artifacts # model updates without rebuild
+      environment:
+          - MODEL_PATH=artifacts/model.pkl
       healthcheck:
           test: ["CMD", "curl", "-f", "http://localhost:8000/"]
           interval: 30s
@@ -21,7 +21,7 @@ services:
     streamlit:
         build:
             context: .
-            dockerfile: Dockerfile.streamlit
+            dockerfile: Dockerfile
         container_name: streamlit_application
         ports:
             - "8501:8501"
@@ -29,4 +29,5 @@ services:
             - api  # waits for API to start first
         environment:
             - API_URL=http://api:8000  # use service name, not localhost
+        command: streamlit run app.py --server.port 8501 --server.address 0.0.0.0
     
