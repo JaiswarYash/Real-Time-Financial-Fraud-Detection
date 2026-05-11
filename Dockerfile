@@ -9,6 +9,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir -r requirements.txt
 
 COPY . .
+RUN apt update -y && apt install awscli -y
 
 EXPOSE 8000
 
