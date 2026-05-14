@@ -23,8 +23,12 @@ async def custom_exception_handler(request: Request, exc: CustomException):
         content={"message": exc.error_message},
     )
 
-model = load_object("artifacts/model.pkl")
-preprocessor = load_object("artifacts/preprocessor.pkl")
+try:
+    model = load_object("artifacts/model.pkl")
+    preprocessor = load_object("artifacts/preprocessor.pkl")
+except Exception:
+    model = None
+    preprocessor = None
 
 # custom data model for input validation
 class CustomData(BaseModel):
@@ -61,6 +65,9 @@ class CustomData(BaseModel):
 
 @app.post("/predict")
 def predict(data: CustomData):
+    if model is None or preprocessor is None:
+        return {"error": "Model not available"}
+    
     try:
         input_data = np.array([[
             data.Time, data.V1, data.V2, data.V3, data.V4, data.V5, data.V6, data.V7, data.V8, data.V9,
