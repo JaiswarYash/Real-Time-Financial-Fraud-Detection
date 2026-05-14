@@ -16,8 +16,10 @@ test_data = load_data()
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(page_title="Financial Fraud Detection", page_icon=":money_with_wings:", layout="wide", initial_sidebar_state="auto")
-st.title("Financial Fraud Detection App")
+st.markdown("### 🛡️ Real-Time Financial Fraud Detection")
+st.markdown("Analyse transactions using XGBoost model trained on 284,807 transactions")
 st.divider()
+
 st.sidebar.title("Model Info")
 st.sidebar.write("Model: XGBoost")
 st.sidebar.write("Threshold: 0.3")
@@ -47,38 +49,54 @@ def predict_fraud(payload: dict) -> dict | None:
     except Exception as e:
         st.error(f"Unexpected error: {str(e)}")
         return None
-    
 
+# buttons 
+col1, col2 = st.columns(2)
 
+with col1:
+    fraud_clicked = st.button("Sample Fraud Transaction")
+
+with col2:
+    legit_clicked = st.button("Sample Legitimate Transaction")
+
+# sample show
+if fraud_clicked:
+    st.session_state.random_row = test_data[test_data['Class'] == 1].sample(1).iloc[0]
+
+if legit_clicked:
+    st.session_state.random_row = test_data[test_data['Class'] == 0].sample(1).iloc[0]
+
+if fraud_clicked or legit_clicked:
+    st.write(f"**Time:** {st.session_state.random_row['Time']:.0f} seconds")
+    st.write(f"**Amount:** ${st.session_state.random_row['Amount']:.2f}")
+
+# Analyse Transaction button
 # V1-V28 features
 col1, col2 = st.columns(2)
 with col1:
-    if st.button("Analyse Random Transaction"):
-        random_row = test_data.sample(1).iloc[0]
-        st.session_state.v_features = {f"V{i}": random_row[f"V{i}"] for i in range(1, 29)}
-        Amount = random_row["Amount"]
+    if st.button("Analyse Transaction"):
+    if "random_row" not in st.session_state:
+        st.warning("Please sample a transaction first")
+    else:
+        row = st.session_state.random_row
         payload = {
-        "Time": random_row["Time"],
-        **st.session_state.v_features,
-        "Amount": Amount
+            "Time": row["Time"],
+            **{f"V{i}": row[f"V{i}"] for i in range(1, 29)},
+            "Amount": row["Amount"]
         }
         if check_api_status():
             result = predict_fraud(payload)
             if result is not None:
-                actual = "Fraud" if random_row['Class'] == 1 else "Legitimate"
+                actual = "Fraud" if row['Class'] == 1 else "Legitimate"
                 st.info(f"Actual Label: {actual}")
-
                 if result['prediction'] == 1:
-                    st.error(f"🚨 FRAUDULENT TRANSACTION")
+                    st.error("🚨 FRAUDULENT TRANSACTION")
                 else:
-                    st.success(f"✅ LEGITIMATE TRANSACTION")
+                    st.success("✅ LEGITIMATE TRANSACTION")
                 with col2:
                     st.metric("Fraud Probability", f"{result['probability']:.2%}")
                     st.metric("Risk Level", result['risk'])
-
-                    correct = (result["prediction"]==1)==(random_row["Class"]==1)
+                    correct = (result["prediction"]==1)==(row["Class"]==1)
                     st.write("✅ Model predicted correctly" if correct else "❌ Model predicted incorrectly")
-        
-                
         else:
-            st.error("API is not available. Please start the FastAPI server on localhost:8000")
+            st.error("API is not available.")
