@@ -96,6 +96,7 @@ def predict(data: CustomData):
 
         # 4. Determine risk
         risk = "High" if probability[0] >= BEST_THRESHOLD else "Low"
+        
 
         # 5. Return
         return {
