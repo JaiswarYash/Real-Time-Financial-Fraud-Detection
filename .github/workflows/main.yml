@@ -9,7 +9,7 @@ on:
 
 env:
   AWS_REGION: ap-south-1      # your AWS region
-  ECR_REPOSITORY: fraud-detection  # your ECR repo name
+  ECR_REPOSITORY: Fraud-Detection  # your ECR repo name
 
 permissions:
   id-token: write
@@ -102,7 +102,7 @@ jobs:
         
         - name: Run Docker Image to serve users
           run: |
-            docker run -d -p 8000:8000 --ipc="host" --name=mltest -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
+            docker run -d -p 8000:8000 --ipc="host" --name=Fraud-Detection -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
         - name: Clean previous images and containers
           run: |
             docker system prune -f
