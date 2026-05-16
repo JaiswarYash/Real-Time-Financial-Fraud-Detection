@@ -87,16 +87,19 @@ with col1:
             if check_api_status():
                 result = predict_fraud(payload)
                 if result is not None:
-                    actual = "Fraud" if row['Class'] == 1 else "Legitimate"
-                    st.info(f"Actual Label: {actual}")
-                    if result['prediction'] == 1:
-                        st.error("🚨 FRAUDULENT TRANSACTION")
+                    if "error" in result:
+                        st.error(f"API Error: {result['error']}")
                     else:
-                        st.success("✅ LEGITIMATE TRANSACTION")
-                    with col2:
-                        st.metric("Fraud Probability", f"{result['probability']:.2%}")
-                        st.metric("Risk Level", result['risk'])
-                        correct = (result["prediction"]==1)==(row["Class"]==1)
-                        st.write("✅ Model predicted correctly" if correct else "❌ Model predicted incorrectly")
+                        actual = "Fraud" if row['Class'] == 1 else "Legitimate"
+                        st.info(f"Actual Label: {actual}")
+                        if result['prediction'] == 1:
+                            st.error("🚨 FRAUDULENT TRANSACTION")
+                        else:
+                            st.success("✅ LEGITIMATE TRANSACTION")
+                        with col2:
+                            st.metric("Fraud Probability", f"{result['probability']:.2%}")
+                            st.metric("Risk Level", result['risk'])
+                            correct = (result["prediction"]==1)==(row["Class"]==1)
+                            st.write("✅ Model predicted correctly" if correct else "❌ Model predicted incorrectly")
             else:
                 st.error("API is not available.")
