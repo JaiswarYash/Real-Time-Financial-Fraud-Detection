@@ -105,3 +105,9 @@ jobs:
         - name: Clean previous images and containers
           run: |
             docker system prune -f
+        - name: Stop and remove existing container
+          run: |
+            docker stop fraud-detection || true
+            docker rm fraud-detection || true
+            docker stop streamlit || true
+            docker rm streamlit || true
