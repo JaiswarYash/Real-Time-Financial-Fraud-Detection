@@ -71,7 +71,6 @@ if fraud_clicked or legit_clicked:
     st.write(f"**Amount:** ${st.session_state.random_row['Amount']:.2f}")
 
 # Analyse Transaction button
-# V1-V28 features
 col1, col2 = st.columns(2)
 with col1:
     if st.button("Analyse Transaction"):
