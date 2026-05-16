@@ -106,6 +106,14 @@ jobs:
           run: |
             docker run -d -p 8000:8000 --ipc="host" --name=fraud-detection -e 'AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}' -e 'AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}' -e 'AWS_REGION=${{ secrets.AWS_REGION }}'  ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.ECR_REPOSITORY_NAME }}:latest
 
+        - name: Run Streamlit container
+          run: |
+            docker run -d -p 8501:8501 --name=streamlit \
+            -v ~/artifacts:/app/artifacts \
+            -e API_URL=http://YOUR-ELASTIC-IP:8000 \
+            ${{secrets.AWS_ECR_LOGIN_URI}}/${{ secrets.AWS_ECR_REPOSITORY_NAME }}:latest \
+            streamlit run app.py --server.port 8501 --server.address 0.0.0.0
+
         - name: Clean up disk space
           run: |
             docker system prune -af

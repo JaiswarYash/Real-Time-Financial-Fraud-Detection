@@ -8,8 +8,8 @@ A production-grade Machine Learning system that detects fraudulent credit card t
 
 | Service | URL |
 |---|---|
-| API Docs | `http://ec2-13-233-142-87.ap-south-1.compute.amazonaws.com:8000/docs` |
-| Dashboard | `http://ec2-13-233-142-87.ap-south-1.compute.amazonaws.com:8501` |
+| API Docs | `http://3.111.93.235:8000/docs` |
+| Dashboard | `http://3.111.93.235:8501` |
 
 ---
 
