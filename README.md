@@ -16,7 +16,7 @@ A production-grade Machine Learning system that detects fraudulent credit card t
 ## Video Demo
 
 Incase if live demo does not work
-![Demo_Video](Real-Time-Financial-Fraud-Detection/demo_video/demo_video.webm)
+![Demo_Video](demo_video/demo_video.webm)
 
 ---
 
