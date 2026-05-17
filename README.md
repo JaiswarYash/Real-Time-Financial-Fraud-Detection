@@ -13,6 +13,13 @@ A production-grade Machine Learning system that detects fraudulent credit card t
 
 ---
 
+## Video Demo
+
+Incase if live demo does not work
+![Demo_Video](Real-Time-Financial-Fraud-Detection/demo_video/demo_video.webm)
+
+---
+
 ## The Problem
 
 Banks and fintech companies process millions of transactions daily. Roughly 0.17% are fraudulent — costing the industry billions annually. Rule-based systems miss novel fraud patterns. Human review at scale is impossible.
